@@ -90,13 +90,13 @@ x \notin \myH_{k-1}(\myX)$. Иными словами, это максималь
 \begin{algorithm}[h]
  \KwData{$x \in \myX$}
  добавить $x$ в конец буфера\;
- \If{размер буфера $> log_2 n$}{
+ \If{размер буфера $> \log_2 n$}{
      создать двоичную кучу $T$ из элементов буфера\;
      очистить буфер\;
      добавить кучу $T$ в \MH\;
  }
  \caption{Операция \textbf{insert}}
- \label{algo-findmin}
+ \label{algo-insert}
 \end{algorithm}
 
 \subsection{Операция извлечения минимума} \label{findmin}
