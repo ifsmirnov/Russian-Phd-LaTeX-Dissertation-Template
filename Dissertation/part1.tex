@@ -92,6 +92,7 @@ x \notin \myH_{k-1}(\myX)$. Иными словами, это максималь
 
 \subsection{Операция вставки} \label{insert}
 \begin{algorithm}[h]
+\DefineAlgoKeywords
  \KwData{$x \in \myX$}
  добавить $x$ в конец буфера\;
  \If{размер буфера $> \log_2 n$}{
@@ -129,10 +130,11 @@ x \notin \myH_{k-1}(\myX)$. Иными словами, это максималь
 \end{function}
 
 \begin{algorithm}[h]
- \KwData{x "--- минимальный элемент или куча, содержащая его}
- \Switch{положение x}{
+\DefineAlgoKeywords
+ \KwData{\x "--- минимальный элемент или куча, содержащая его}
+ \Switch{положение \x}{
   \uCase{буфер}{
-      удалить x из буфера и вернуть его\;
+      удалить \x из буфера и вернуть его\;
   }
   \Case{\HH}{
       T = \HH.top()\;
@@ -199,37 +201,29 @@ $T$, тем самым переведя балансировку в стадию
 
 Теперь мы готовы целиком описать алгоритмы вставки в \SCH и удаления минимума.
 
-\newcommand{\BalState}{\texttt{BalancingState}\xspace}
-\newcommand{\BufSize}{\texttt{BufferSize}\xspace}
-\newcommand{\ElemCount}{\texttt{InsertionsCount}\xspace}
-\newcommand{\myC}{\texttt{C}\xspace}
-\newcommand{\NoAction}{\texttt{NoAction}\xspace}
-\newcommand{\StateI}{\texttt{StateI}\xspace}
-\newcommand{\StateII}{\texttt{StateII}\xspace}
-\newcommand{\Gets}{\ $\gets$\ }
-\newcommand{\Loc}{\texttt{Location}\xspace}
- 
 \section{Алгоритм}
 Алгоритмы \ref{algo-init-deamort}, \ref{algo-insert-deamort}, \ref{algo-extractmin-deamort}
 описывают соответственно инициализацию структуры данных, добавление элемента и извлечение
 минимального элемента.
 
 \begin{algorithm}[t]
- \Begin{
-     \BalState \Gets \NoAction \;
-     \BufSize \Gets 0\;
-     \ElemCount \Gets 1\;
-     \myC \Gets константа из леммы \ref{theo-balancing-constant} \;
- }
- \caption{Инициализация деамортизированной кучи}
- \label{algo-init-deamort}
+\DefineAlgoKeywords
+\Begin{
+    \BalState \Gets \NoAction \;
+    \BufSize \Gets 0\;
+    \ElemCount \Gets 1\;
+    \C \Gets константа из леммы \ref{theo-balancing-constant} \;
+}
+\caption{Инициализация деамортизированной кучи}
+\label{algo-init-deamort}
 \end{algorithm}
 
 \begin{algorithm}[p]
- \KwData{$x \in \myX$}
+\DefineAlgoKeywords
+ \KwData{$\x \in \myX$}
  \Begin{
      \If{$\BalState\ \in \{\StateI, \StateII\}$}{
-        выполнить \myC операций по балансировке\;
+        выполнить \C операций по балансировке\;
         \If{закончилась стадия I}{
             \BalState \Gets \StateII\;
         }
@@ -238,7 +232,7 @@ $T$, тем самым переведя балансировку в стадию
             \BalState \Gets \NoAction\;
         }
      }
-     добавить $x$ в конец буфера\;
+     добавить \x в конец буфера\;
      \BufSize \Gets \BufSize + 1\;
      \ElemCount \Gets \ElemCount + 1\;
      \If{$\BufSize > \log_2 \ElemCount$}{
@@ -252,14 +246,15 @@ $T$, тем самым переведя балансировку в стадию
 \end{algorithm}
 
 \begin{algorithm}[p]
+\DefineAlgoKeywords
  \Begin{
      \If{\BalState =\ \StateI}{
-         закончить построение кучи на T\;
-         добавить T в \HH\;
+         закончить построение кучи на \T\;
+         добавить \T в \HH\;
      }
      \If{\BalState =\ \StateII}{
          отменить отложенное добавление в \MH\;
-         добавить T в \HH\;
+         добавить \T в \HH\;
      }
      \lIf{\MH непуста}{
          вставить \MH в \HH

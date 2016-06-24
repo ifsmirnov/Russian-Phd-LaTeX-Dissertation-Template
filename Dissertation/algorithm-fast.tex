@@ -1,0 +1,94 @@
+% ---------------- Initialization ---------------
+\begin{algorithm}[p]
+\DefineAlgoKeywords
+
+\Begin{
+    \BalState \Gets (\NoAction, \dots, \NoAction) ($r$ times)\;
+    \BufSize \Gets 0\;
+    \ElemCount \Gets 1\;
+    \C \Gets константа из леммы \todo{TODO}\;
+}
+\caption{Инициализация \CH[r]}
+\label{alg:init-r}
+\end{algorithm}
+
+\todo{Как не вставлять textit в аргументы массива в условиях?}
+
+% ---------------- Insertion -------------------
+\begin{algorithm}[p]
+\DefineAlgoKeywords
+
+\KwData{$\x \in \myX$}
+\Begin{
+    \If{$\BalState{\textit{0}}\ \in \{\StateI, \StateII\}$}{
+        выполнить \C операций по балансировке на нулевом уровне\;
+        \If{закончилась стадия I}{
+            \BalState{0} \Gets \StateII\;
+        }
+        \If{закончилась стадия II}{
+            выполнить переключение версии \MH\;
+            \BalState{0} \Gets \NoAction\;
+        }
+    }
+    \For{$t = 1$ \KwTo $r-1$}{
+        \If{$\BalState{\textit{t}} = \StateII$}{
+            выполнить \C операций по балансировке на $t$-м уровне\;
+            \If{закончилась стадия II}{
+                выполнить переключение версии \MH[t+1]\;
+                \BalState{t} \Gets \NoAction\;
+            }
+        }
+    }
+    добавить \x в конец буфера\;
+    \BufSize \Gets \BufSize + 1\;
+    \ElemCount \Gets \ElemCount + 1\;
+    \If{$\BufSize > \log_2 \ElemCount$}{
+        \BufSize \Gets 0\;
+        \BalState{0} \Gets \StateI\;
+        \T{0} \Gets буфер\;
+        начать балансировку на элементах буфера и очистить буфер\;
+    }
+    \For{$t = 1$ \KwTo $r-1$}{
+        \If{\MH[t].size() $> \log_2^{(r-t)} n$}{
+            \BalState{t} \Gets \StateII\;
+            начать отложенно вставлять \MH[t] в \MH[t+1]\;
+            \T{t} \Gets \MH[t]\;
+        }
+    }
+}
+\caption{Операция \textbf{insert} в \CH[r]}
+\label{alg:insert-r}
+\end{algorithm}
+
+% ---------------- Extraction -------------------
+\begin{algorithm}[p]
+\DefineAlgoKeywords
+\Begin{
+    \If{\BalState{0} =\ \StateI}{
+        закончить построение кучи на \T{0}\;
+        добавить T в \HH\;
+        \BalState{0} \Gets \NoAction\;
+    }
+    \For{$t = 0$ \KwTo $r-1$}{
+        \If{\BalState{t} =\ \StateII}{
+            отменить отложенное добавление в \MH[t+1]\;
+            добавить \T[t] в \HH\;
+            \BalState{t} \Gets \NoAction\;
+        }
+    }
+    \For{$t = 1$ \KwTo $r$}{
+        добавить \MH[t] в \HH\;        
+    }
+    просмотреть буфер B и вершину \HH, если куча непуста,
+    найти среди них минимальный элемент\;
+    \eIf{минимум в B}{
+        удалить минимум из буфера\;
+    }{
+        T = \HH.top()\;
+        \HH.extractMin()\;
+        \Return \Yield(T)\;
+    }
+}
+\caption{Операция \textbf{extractMin} в \CH[r]}
+\label{alg:extractmin-r}
+\end{algorithm}
