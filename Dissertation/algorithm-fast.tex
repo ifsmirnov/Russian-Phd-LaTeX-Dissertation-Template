@@ -14,8 +14,6 @@
 \label{alg:init-r}
 \end{algorithm}
 
-\todo{Как не вставлять textit в аргументы массива в условиях?}
-
 % ---------------- Insertion -------------------
 \begin{algorithm}[p]
 \DefineAlgoKeywords
@@ -51,6 +49,10 @@
             \BalState{t} \Gets \StateII\;
             начать отложенно вставлять \MH[t] в \MH[t+1]\;
             \T{t} \Gets \MH[t]\;
+            \tcp{\MH[t] теперь пуста}
+            \If{\BalState{t} = \StateII}{
+                положить \T{t-1} единственным элементом \MH[t]\;
+            }
         }
     }
 }
@@ -70,7 +72,7 @@
     \For{$t = 0$ \KwTo $r-1$}{
         \If{\BalState{\textit{t}} =\ \StateII}{
             отменить отложенное добавление в \MH[t+1]\;
-            добавить \T[t] в \HH\;
+            добавить \T{t} в \HH\;
             \BalState{t} \Gets \NoAction\;
         }
     }
@@ -126,10 +128,14 @@
     }
     добавить \x в \MH[1]\;
     \For{$t = 1$ \KwTo \MaxLevel}{
-        \If{\MH[t].size() $>{}^t{2}$}{
+        \If{\MH[t].size() $\geq {}^t{2}$}{
             \BalState{t} \Gets \StateII\;
             начать отложенно вставлять \MH[t] в \MH[t+1]\;
             \T{t} \Gets \MH[t]\;
+            \tcp{\MH[t] теперь пуста}
+            \If{\BalState{t} = \StateII}{
+                положить \T{t-1} единственным элементом \MH[t]\;
+            }
             \MaxLevel \Gets \max{\MaxLevel, t+1}\;
         }
     }
@@ -150,7 +156,7 @@
     \For{$t = 0$ \KwTo $r-1$}{
         \If{\BalState{\textit{t}} =\ \StateII}{
             отменить отложенное добавление в \MH[t+1]\;
-            добавить \T[t] в \HH\;
+            добавить \T{t} в \HH\;
             \BalState{t} \Gets \NoAction\;
         }
     }
@@ -168,5 +174,5 @@
     }
 }
 \caption{Операция \textbf{extractMin} в \CH[*]}
-\label{alg:extractmin-r}
+\label{alg:extractmin-*}
 \end{algorithm}
